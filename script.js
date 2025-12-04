@@ -37,13 +37,13 @@ equal.addEventListener("click", () => {
     let inputValue = input.value;
     try {
         let expression = inputValue
-            .replaceAll("sin", "Math.sin")
-            .replaceAll("cos", "Math.cos")
-            .replaceAll("tan", "Math.tan")
+            .replaceAll("sin", "sinCustom")
+            .replaceAll("cos", "cosCustom")
+            .replaceAll("tan", "tanCustom")
+            .replaceAll("√", "sqrtCustom")
+            .replaceAll("∛", "cbrtCustom")
             .replaceAll("^2", "**2")
             .replaceAll("^3", "**3")
-            .replaceAll("√", "Math.sqrt")
-            .replaceAll("∛", "Math.cbrt")
             .replace(/(\d+)!/g, (_, num) => factorial
             (Number(num)));
 
@@ -66,6 +66,59 @@ function factorial(n) {
     if (n === 0 || n === 1) return 1;
     return n * factorial(n - 1);
 }
+
+// seno
+function sinCustom(x) {
+    x = x * (Math.PI / 180); // Si tus botones usan grados
+    let term = x;
+    let sum = x;
+    for (let n = 1; n < 10; n++) {
+        term *= -1 * x * x / ((2 * n) * (2 * n + 1));
+        sum += term;
+    }
+    return sum;
+}
+
+// coseno
+function cosCustom(x) {
+    x = x * (Math.PI / 180);
+    let term = 1;
+    let sum = 1;
+    for (let n = 1; n < 10; n++) {
+        term *= -1 * x * x / ((2 * n - 1) * (2 * n));
+        sum += term;
+    }
+    return sum;
+}
+
+// Tangente
+function tanCustom(x) {
+    return sinCustom(x) / cosCustom(x);
+}
+
+// Raíz cuadrada
+function sqrtCustom(n) {
+    if (n < 0) return NaN;
+    let x = n;
+    let last;
+    do {
+        last = x;
+        x = (x + n / x) / 2;
+    } while (Math.abs(x - last) > 0.00001);
+    return x;
+}
+
+// Raíz cúbica
+function cbrtCustom(n) {
+    let x = n;
+    let last;
+    do {
+        last = x;
+        x = (2 * x + n / (x * x)) / 3;
+    } while (Math.abs(x - last) > 0.00001);
+    return x;
+}
+
 
 function addToHistory(expression, result) {
     let divItem = document.createElement("div");
